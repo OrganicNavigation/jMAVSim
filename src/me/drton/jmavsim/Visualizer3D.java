@@ -143,7 +143,8 @@ public class Visualizer3D extends JFrame {
 
         setViewType(VIEW_TYPE);
         setZoomMode(ZOOM_MODE);
-        setVisible(true);
+        setVisible(false); // 2017-01-27 Set to `false` to turn off GUI and speed up VM
+                           //            for U of MN projects.
         splitPane.resetToPreferredSizes();
         toggleReportPanel(false);
         resetView();
