@@ -144,15 +144,16 @@ public abstract class Environment extends WorldObject implements ReportingObject
     }
 
     /**
-     * Set magnetic field using specified inclination and declination
+     * Set magnetic field using specified inclination, declination, and magnitude
      *
      * @param incl Magnetic inclination in degrees
      * @param decl Magnetic declination in degrees
+     * @param magn Magnetic magnitude   in gauss [TODO: check if units are assumed otherwise elsewhere]
      */
-    public void setMagFieldByInclDecl(double incl, double decl) {
+    public void setMagFieldByInclDeclMagn(double incl, double decl, double magn) {
         decl = Math.toRadians(decl);
         incl = Math.toRadians(incl);
-        Vector3d magField = new Vector3d(Math.cos(incl), 0.0f, Math.sin(incl));
+        Vector3d magField = new Vector3d(magn*Math.cos(incl), 0.0f, magn*Math.sin(incl));
         Matrix3d declMtx = new Matrix3d();
         declMtx.rotZ(decl);
         declMtx.transform(magField);

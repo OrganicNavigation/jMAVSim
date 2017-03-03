@@ -69,8 +69,10 @@ public class Simulator implements Runnable {
     // Seattle: 
     // Moscow:  
     // T-burg: 68.53, -11.94
-    public static double  DEFAULT_MAG_INCL = 63.32;
-    public static double  DEFAULT_MAG_DECL = 2.13;
+    // U of MN Flying Grounds (2017-03-03): 71.59, 0.42 deg and 0.551371 gauss
+    public static double  DEFAULT_MAG_INCL = 71.3165;
+    public static double  DEFAULT_MAG_DECL = 0.1419;
+    public static double  DEFAULT_MAG_MAGN = 0.551371;
     // Alternate way to set mag field vectors directly if MAG_INCL and MAG_DECL are zero. 
     //   If Y value is left as zero, then an approximate declination will be added later based on the origin GPS position.
     // Zurich:  (0.44831f, 0.01664f, 0.89372f)
@@ -195,8 +197,8 @@ public class Simulator implements Runnable {
         // (do this after environment already has a reference point in case we need to look up declination manually)
         if (DO_MAG_FIELD_LOOKUP)
             simpleEnvironment.setMagField(magFieldLookup(referencePos));
-        else if (DEFAULT_MAG_INCL != 0.0 || DEFAULT_MAG_DECL != 0.0)
-            simpleEnvironment.setMagFieldByInclDecl(DEFAULT_MAG_INCL, DEFAULT_MAG_DECL);
+        else if ((DEFAULT_MAG_INCL != 0.0 || DEFAULT_MAG_DECL != 0.0) && DEFAULT_MAG_MAGN != 0.0)
+            simpleEnvironment.setMagFieldByInclDeclMagn(DEFAULT_MAG_INCL, DEFAULT_MAG_DECL, DEFAULT_MAG_MAGN);
         else if (DEFAULT_MAG_FIELD.y == 0.0f && (DEFAULT_MAG_FIELD.x != 0.0 || DEFAULT_MAG_FIELD.z != 0.0)) {
             Vector3d magField = DEFAULT_MAG_FIELD;
             // Set declination based on the initialization position of the Simulator
@@ -388,8 +390,7 @@ public class Simulator implements Runnable {
         Double decl;
         Double incl;
         Vector3d magField = new Vector3d(0.0f, 0.0f, 0.0f);
-        String resp, vals[];
-        
+        String resp, vals[];             
         String reqUrl = "http://www.ngdc.noaa.gov/geomag-web/calculators/calculateIgrfwmm?";
         reqUrl += "resultFormat=csv&coordinateSystem=M&lat1=" + pos.lat + "&lon1=" + pos.lon + "&elevation=" + pos.alt / 1e3;
         System.out.println("Attempting magnetic field data lookup from NOAA...");
